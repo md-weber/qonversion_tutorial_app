@@ -1,10 +1,8 @@
 import 'package:qonversion_flutter/qonversion_flutter.dart';
 
-import '../secret.dart';
-
 class QonversionService {
   Future<void> initializeQonversion() async {
-    await Qonversion.launch('$qonversion_project_id', isObserveMode: false);
+    await Qonversion.launch('fVz6Vy7hRcoei0QihTkwGMx1PZ6c-qBB', isObserveMode: false);
   }
 
   Future<QOffering?> getMainOffering() async {
