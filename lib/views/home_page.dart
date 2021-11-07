@@ -33,7 +33,6 @@ class HomePage extends StatelessWidget {
             );
           }
 
-          // TODO: Bau ne liste ;
           if (snapshot.hasError)
             return Text("Something went wrong, please try again later");
           return Center(child: CircularProgressIndicator());
