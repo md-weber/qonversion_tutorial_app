@@ -29,15 +29,22 @@ class HomePage extends StatelessWidget {
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemBuilder: (context, index) {
                 QProduct product = products![index];
+
                 JsonEncoder encoder = new JsonEncoder.withIndent('  ');
                 String prettyprint = encoder.convert(product.toJson());
                 print(prettyprint);
+
+                var handlePurchase = () => _service.purchaseProduct(product);
+
                 return Platform.isIOS
-                    ? CupertinoProductCard(product,
-                        handlePurchase: () => _service.purchaseProduct(product))
-                    : ProductCard(product,
-                        handlePurchase: () =>
-                            _service.purchaseProduct(product));
+                    ? CupertinoProductCard(
+                        product,
+                        handlePurchase: handlePurchase,
+                      )
+                    : ProductCard(
+                        product,
+                        handlePurchase: handlePurchase,
+                      );
               },
               itemCount: products.length,
             );

@@ -37,7 +37,8 @@ class ProductCard extends StatelessWidget {
                         ),
                         TextButton(
                           child: Text(
-                              "Buy me for ${product.skuDetails?.price} ${product.skuDetails?.priceCurrencyCode}"),
+                            "Buy me for ${product.skuDetails?.price} ${product.skuDetails?.priceCurrencyCode}",
+                          ),
                           onPressed: this.handlePurchase,
                         )
                       ],

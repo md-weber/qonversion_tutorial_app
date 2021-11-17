@@ -1,9 +1,14 @@
 import 'package:qonversion_flutter/qonversion_flutter.dart';
 
+import '../keys.dart';
+
 class QonversionService {
+  final _debugMode = true;
+
   Future<void> initializeQonversion() async {
-    await Qonversion.launch('fVz6Vy7hRcoei0QihTkwGMx1PZ6c-qBB',
-        isObserveMode: false);
+    await Qonversion.launch(qonversion_project_key, isObserveMode: false);
+
+    if (_debugMode) Qonversion.setDebugMode();
   }
 
   Future<QOffering?> getMainOffering() async {
@@ -30,6 +35,7 @@ class QonversionService {
     await initializeQonversion();
     try {
       await Qonversion.purchaseProduct(product);
+      print("Successful purchased a product");
     } catch (e) {
       print(e);
     }
