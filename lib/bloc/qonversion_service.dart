@@ -2,7 +2,8 @@ import 'package:qonversion_flutter/qonversion_flutter.dart';
 
 class QonversionService {
   Future<void> initializeQonversion() async {
-    await Qonversion.launch('fVz6Vy7hRcoei0QihTkwGMx1PZ6c-qBB', isObserveMode: false);
+    await Qonversion.launch('fVz6Vy7hRcoei0QihTkwGMx1PZ6c-qBB',
+        isObserveMode: false);
   }
 
   Future<QOffering?> getMainOffering() async {
@@ -23,5 +24,14 @@ class QonversionService {
     }
 
     return offering.products;
+  }
+
+  Future<void> purchaseProduct(QProduct product) async {
+    await initializeQonversion();
+    try {
+      await Qonversion.purchaseProduct(product);
+    } catch (e) {
+      print(e);
+    }
   }
 }

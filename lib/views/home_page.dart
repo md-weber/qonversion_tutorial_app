@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:qonversion_flutter/qonversion_flutter.dart';
 import 'package:qonversion_tutorial_app/bloc/qonversion_service.dart';
+import 'package:qonversion_tutorial_app/views/home/android_product_card.dart';
+import 'package:qonversion_tutorial_app/views/home/cupertino_product_card.dart';
 
 class HomePage extends StatelessWidget {
   final QonversionService _service = QonversionService();
@@ -24,10 +29,15 @@ class HomePage extends StatelessWidget {
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               itemBuilder: (context, index) {
                 QProduct product = products![index];
-                print(product.toJson());
-                return Card(
-                  child: Text(product.storeTitle ?? "No Store Title"),
-                );
+                JsonEncoder encoder = new JsonEncoder.withIndent('  ');
+                String prettyprint = encoder.convert(product.toJson());
+                print(prettyprint);
+                return Platform.isIOS
+                    ? CupertinoProductCard(product,
+                        handlePurchase: () => _service.purchaseProduct(product))
+                    : ProductCard(product,
+                        handlePurchase: () =>
+                            _service.purchaseProduct(product));
               },
               itemCount: products.length,
             );
