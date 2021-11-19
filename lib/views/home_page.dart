@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:qonversion_flutter/qonversion_flutter.dart';
 import 'package:qonversion_tutorial_app/bloc/qonversion_service.dart';
 import 'package:qonversion_tutorial_app/views/home/product_list.dart';
+import 'package:qonversion_tutorial_app/views/home/purchased_products.dart';
 
 class HomePage extends StatelessWidget {
   final QonversionService _service = QonversionService();
@@ -20,32 +20,7 @@ class HomePage extends StatelessWidget {
         SizedBox(height: 8),
         Expanded(
           flex: 2,
-          child: Column(
-            children: [
-              Text("Bought Products"),
-              Expanded(
-                  child: FutureBuilder<List<QProduct>>(
-                future: _service.getProductsWithPermission(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) return Text(snapshot.error.toString());
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemBuilder: (context, index) => ListTile(
-                        title: Text(snapshot.data
-                                ?.elementAt(index)
-                                .skProduct
-                                ?.localizedTitle ??
-                            ""),
-                        trailing: Icon(Icons.arrow_forward_ios),
-                      ),
-                      itemCount: snapshot.data?.length,
-                    );
-                  }
-                  return Center(child: CircularProgressIndicator());
-                },
-              ))
-            ],
-          ),
+          child: PurchasedProducts(service: _service),
         ),
       ]),
     );
