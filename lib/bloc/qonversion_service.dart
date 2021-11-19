@@ -1,6 +1,6 @@
 import 'package:qonversion_flutter/qonversion_flutter.dart';
 
-import '../keys.dart';
+import '../secret.dart';
 
 class QonversionService {
   final _debugMode = true;
@@ -21,14 +21,17 @@ class QonversionService {
     }
   }
 
-  Future<List<QProduct>> getProducts() async {
+  Future<QProduct> getProductById(String productId) async {
     await initializeQonversion();
     final QOffering? offering = await getMainOffering();
-    if (offering == null) {
+    final product = offering?.products.firstWhere(
+      (element) => element.qonversionId == productId,
+    );
+    if (product == null) {
       throw Error();
     }
 
-    return offering.products;
+    return product;
   }
 
   Future<void> purchaseProduct(QProduct product) async {
@@ -39,5 +42,30 @@ class QonversionService {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<List<QProduct>> getProductsWithPermission() async {
+    try {
+      var map = await Qonversion.checkPermissions();
+      List<QProduct> products = [];
+      for (final permission in map.values) {
+        final product = await getProductById(permission.productId);
+        products.add(product);
+      }
+      return products;
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  Future<List<QProduct>> getProducts() async {
+    await initializeQonversion();
+    final QOffering? offering = await getMainOffering();
+    if (offering == null) {
+      throw Error();
+    }
+
+    return offering.products;
   }
 }

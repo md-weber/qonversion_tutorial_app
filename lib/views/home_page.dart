@@ -1,11 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:qonversion_flutter/qonversion_flutter.dart';
 import 'package:qonversion_tutorial_app/bloc/qonversion_service.dart';
-import 'package:qonversion_tutorial_app/views/home/android_product_card.dart';
-import 'package:qonversion_tutorial_app/views/home/cupertino_product_card.dart';
+import 'package:qonversion_tutorial_app/views/home/product_list.dart';
 
 class HomePage extends StatelessWidget {
   final QonversionService _service = QonversionService();
@@ -16,45 +12,42 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Flutter Explained - Products")),
-      body: FutureBuilder<List<QProduct>>(
-        future: _service.getProducts(),
-        builder: (context, snapshot) {
-          List<QProduct>? products;
-
-          if (snapshot.hasData) {
-            products = snapshot.data;
-            if (products == null) return Text("No products where found");
-            return GridView.builder(
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-              itemBuilder: (context, index) {
-                QProduct product = products![index];
-
-                JsonEncoder encoder = new JsonEncoder.withIndent('  ');
-                String prettyprint = encoder.convert(product.toJson());
-                print(prettyprint);
-
-                var handlePurchase = () => _service.purchaseProduct(product);
-
-                return Platform.isIOS
-                    ? CupertinoProductCard(
-                        product,
-                        handlePurchase: handlePurchase,
-                      )
-                    : ProductCard(
-                        product,
-                        handlePurchase: handlePurchase,
-                      );
-              },
-              itemCount: products.length,
-            );
-          }
-
-          if (snapshot.hasError)
-            return Text("Something went wrong, please try again later");
-          return Center(child: CircularProgressIndicator());
-        },
-      ),
+      body: Column(children: [
+        Expanded(
+          flex: 3,
+          child: ProductList(service: _service),
+        ),
+        SizedBox(height: 8),
+        Expanded(
+          flex: 2,
+          child: Column(
+            children: [
+              Text("Bought Products"),
+              Expanded(
+                  child: FutureBuilder<List<QProduct>>(
+                future: _service.getProductsWithPermission(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) return Text(snapshot.error.toString());
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemBuilder: (context, index) => ListTile(
+                        title: Text(snapshot.data
+                                ?.elementAt(index)
+                                .skProduct
+                                ?.localizedTitle ??
+                            ""),
+                        trailing: Icon(Icons.arrow_forward_ios),
+                      ),
+                      itemCount: snapshot.data?.length,
+                    );
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ))
+            ],
+          ),
+        ),
+      ]),
     );
   }
 }
