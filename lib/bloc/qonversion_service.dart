@@ -4,14 +4,19 @@ import '../secret.dart';
 
 class QonversionService {
   final _debugMode = true;
+  late final Future<void> init;
+
+  QonversionService() {
+    this.init = initializeQonversion();
+  }
 
   Future<void> initializeQonversion() async {
     await Qonversion.launch(qonversion_project_key, isObserveMode: false);
-
     if (_debugMode) Qonversion.setDebugMode();
   }
 
   Future<QOffering?> getMainOffering() async {
+    await init;
     try {
       QOfferings offerings = await Qonversion.offerings();
       QOffering? offering = offerings.main;
@@ -22,7 +27,7 @@ class QonversionService {
   }
 
   Future<QProduct> getProductById(String productId) async {
-    await initializeQonversion();
+    await init;
     final QOffering? offering = await getMainOffering();
     final product = offering?.products.firstWhere(
       (element) => element.qonversionId == productId,
@@ -35,7 +40,7 @@ class QonversionService {
   }
 
   Future<void> purchaseProduct(QProduct product) async {
-    await initializeQonversion();
+    await init;
     try {
       await Qonversion.purchaseProduct(product);
       print("Successful purchased a product");
@@ -44,7 +49,8 @@ class QonversionService {
     }
   }
 
-  Future<List<QProduct>> getProductsWithPermission() async {
+  Future<List<QProduct>> getPurchasedProducts() async {
+    await init;
     try {
       var map = await Qonversion.checkPermissions();
       List<QProduct> products = [];
@@ -60,7 +66,7 @@ class QonversionService {
   }
 
   Future<List<QProduct>> getProducts() async {
-    await initializeQonversion();
+    await init;
     final QOffering? offering = await getMainOffering();
     if (offering == null) {
       throw Error();

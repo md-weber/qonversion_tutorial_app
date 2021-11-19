@@ -14,7 +14,7 @@ class PurchasedProducts extends StatelessWidget {
         Text("Bought Products"),
         Expanded(
             child: FutureBuilder<List<QProduct>>(
-          future: this.service.getProductsWithPermission(),
+          future: this.service.getPurchasedProducts(),
           builder: (context, snapshot) {
             if (snapshot.hasError) return Text(snapshot.error.toString());
             if (snapshot.hasData) {
