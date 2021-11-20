@@ -1,9 +1,6 @@
 import 'package:qonversion_flutter/qonversion_flutter.dart';
 
-import '../secret.dart';
-
 class QonversionService {
-  final _debugMode = true;
   late final Future<void> init;
 
   QonversionService() {
@@ -11,67 +8,46 @@ class QonversionService {
   }
 
   Future<void> initializeQonversion() async {
-    await Qonversion.launch(qonversion_project_key, isObserveMode: false);
-    if (_debugMode) Qonversion.setDebugMode();
+    // TODO: use the Qonversion SDK to launch the project with your project key
+    // TODO: Activate the debug mode to make purchases in testing environment
+    throw UnimplementedError();
   }
 
   Future<QOffering?> getMainOffering() async {
     await init;
-    try {
-      QOfferings offerings = await Qonversion.offerings();
-      QOffering? offering = offerings.main;
-      return offering;
-    } catch (e) {
-      print("[QonversionService] Unexpected error $e");
-    }
+    // TODO: Get the main offerings from qonversion
+    // TODO: Do not forget to try catch the errors
+    throw UnimplementedError();
   }
 
   Future<QProduct> getProductById(String productId) async {
     await init;
-    final QOffering? offering = await getMainOffering();
-    final product = offering?.products.firstWhere(
-      (element) => element.qonversionId == productId,
-    );
-    if (product == null) {
-      throw Error();
-    }
-
-    return product;
+    // TODO: Get the main offerings
+    // TODO: Find the first product that contains the productId
+    // TODO: If the product is null throw an Error
+    // TODO: return the product
+    throw UnimplementedError();
   }
 
   Future<void> purchaseProduct(QProduct product) async {
     await init;
-    try {
-      await Qonversion.purchaseProduct(product);
-      print("Successful purchased a product");
-    } catch (e) {
-      print(e);
-    }
+    // TODO: Use Qonversion to purchase the product
+    // TODO: Do not forget to Try Catch
+    throw UnimplementedError();
   }
 
   Future<List<QProduct>> getPurchasedProducts() async {
     await init;
-    try {
-      var map = await Qonversion.checkPermissions();
-      List<QProduct> products = [];
-      for (final permission in map.values) {
-        final product = await getProductById(permission.productId);
-        products.add(product);
-      }
-      return products;
-    } catch (e) {
-      print(e);
-      throw e;
-    }
+    // TODO: Check for the purchased products via the permissions
+    // TODO: Ask for the product via getProductById;
+    // TODO: Return the products
+    throw UnimplementedError();
   }
 
   Future<List<QProduct>> getProducts() async {
     await init;
-    final QOffering? offering = await getMainOffering();
-    if (offering == null) {
-      throw Error();
-    }
-
-    return offering.products;
+    // TODO: ask for the main offering
+    // TODO: return all products on the offering.
+    throw UnimplementedError();
   }
 }
