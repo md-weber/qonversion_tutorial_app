@@ -11,8 +11,8 @@ class QonversionService {
   }
 
   Future<void> initializeQonversion() async {
-    await Qonversion.launch(qonversion_project_key, isObserveMode: false);
     if (_debugMode) Qonversion.setDebugMode();
+    await Qonversion.launch(qonversion_project_key, isObserveMode: false);
   }
 
   Future<QOffering?> getMainOffering() async {

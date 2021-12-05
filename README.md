@@ -7,7 +7,7 @@
 This repository presents the Monetization tutorial
 <!-- TODO: Change URL -->
 
-- [Improve your monetization with Qonversion](https://www.youtube.com/c/flutterexplained)
+- [In app purchases and subscriptions with Qonversion - Full Tutorial](https://www.youtube.com/c/flutterexplained)
 
 ## How to use this repository
 
